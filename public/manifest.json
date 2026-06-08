@@ -2,6 +2,7 @@
   "name": "CashControl - Budget Tracker",
   "short_name": "CashControl",
   "description": "Track income, expenses, budget goals, statistics and vacation currency conversions offline.",
+  "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -46,7 +47,6 @@
       "src": "./screenshots/cashcontrol-mobile.png",
       "sizes": "375x844",
       "type": "image/png",
-      "form_factor": "narrow",
       "label": "CashControl dashboard on mobile"
     }
   ]

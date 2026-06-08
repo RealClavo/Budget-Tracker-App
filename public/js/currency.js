@@ -2,7 +2,7 @@
   "use strict";
 
   const namespace = (window.CashControl = window.CashControl || {});
-  const apiBaseUrl = "https://api.frankfurter.dev/v2/rates";
+  const apiBaseUrl = "https://api.frankfurter.dev/v2";
 
   function translate(key, fallback) {
     return namespace.i18n && typeof namespace.i18n.t === "function" ? namespace.i18n.t(key, fallback) : fallback;
@@ -21,7 +21,11 @@
   function buildRatesUrl(from, to) {
     // Frankfurter heeft geen API key nodig. encodeURIComponent houdt de URL
     // veilig als een selectiewaarde ooit wordt aangepast of uitgebreid.
-    return `${apiBaseUrl}?base=${encodeURIComponent(from)}&quotes=${encodeURIComponent(to)}`;
+    return `${apiBaseUrl}/rates?base=${encodeURIComponent(from)}&quotes=${encodeURIComponent(to)}`;
+  }
+
+  function buildRatePairUrl(from, to) {
+    return `${apiBaseUrl}/rate/${encodeURIComponent(from)}/${encodeURIComponent(to)}`;
   }
 
   function getCachedRate(from, to) {
@@ -83,7 +87,20 @@
       return { rate: 1, cached: false };
     }
 
-    const response = await fetch(buildRatesUrl(from, to), {
+    const pairResult = await fetchRateFromUrl(buildRatePairUrl(from, to), to).catch(() => null);
+    if (pairResult) {
+      setCachedRate(from, to, pairResult);
+      return { rate: pairResult, cached: false };
+    }
+
+    const rateResult = await fetchRateFromUrl(buildRatesUrl(from, to), to);
+    setCachedRate(from, to, rateResult);
+    return { rate: rateResult, cached: false };
+  }
+
+  async function fetchRateFromUrl(url, to) {
+    const response = await fetch(url, {
+      cache: "no-store",
       headers: {
         Accept: "application/json"
       }
@@ -99,8 +116,7 @@
       throw new Error("Invalid exchange rate");
     }
 
-    setCachedRate(from, to, rate);
-    return { rate, cached: false };
+    return rate;
   }
 
   function readRateFromResponse(data, to) {
@@ -141,65 +157,92 @@
     }
   }
 
+  async function handleConverterSubmit(event) {
+    if (event) {
+      if (event.cashControlHandled) {
+        return;
+      }
+      event.cashControlHandled = true;
+      event.preventDefault();
+    }
+
+    const eventTarget = event && event.currentTarget;
+    const form =
+      eventTarget && eventTarget.matches && eventTarget.matches("[data-converter-form]")
+        ? eventTarget
+        : eventTarget && eventTarget.closest
+          ? eventTarget.closest("[data-converter-form]")
+          : document.querySelector("[data-converter-form]");
+
+    if (!form) {
+      return;
+    }
+
+    const status = document.querySelector("[data-converter-status]");
+    const amountControl = form.elements.namedItem("amount");
+    const fromControl = form.elements.namedItem("from");
+    const toControl = form.elements.namedItem("to");
+    const amount = Number(amountControl && amountControl.value);
+    const from = String((fromControl && fromControl.value) || "").toUpperCase();
+    const to = String((toControl && toControl.value) || "").toUpperCase();
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      setStatus(status, translate("messages.invalidAmount", "Bedrag moet een positief getal zijn."), "error");
+      return;
+    }
+
+    if (!namespace.storage.validateCurrency(from) || !namespace.storage.validateCurrency(to)) {
+      setStatus(status, translate("messages.invalidCurrency", "Kies een geldige valuta."), "error");
+      return;
+    }
+
+    setStatus(status, translate("converter.loading", "Wisselkoers ophalen..."), "");
+
+    try {
+      const conversion = await convertCurrency(amount, from, to);
+      renderConversion(amount, from, to, conversion.rate, conversion.cached);
+
+      if (conversion.offline) {
+        setStatus(status, "Offline modus: laatste opgeslagen wisselkoers wordt gebruikt.", "success");
+      } else if (conversion.cached) {
+        setStatus(status, translate("converter.cachedFallback", "API niet bereikbaar. Laatste opgeslagen wisselkoers wordt gebruikt."), "success");
+      } else {
+        setStatus(status, translate("converter.success", "Wisselkoers bijgewerkt."), "success");
+      }
+    } catch (error) {
+      const message =
+        error.message === "offline-without-cache"
+          ? translate("converter.noCachedRate", "Offline en nog geen opgeslagen wisselkoers beschikbaar.")
+          : translate("converter.error", "Wisselkoers ophalen is mislukt. Probeer het later opnieuw.");
+      setStatus(status, message, "error");
+    }
+  }
+
   function hydrateConverter() {
     const form = document.querySelector("[data-converter-form]");
     if (!form) {
       return;
     }
 
-    const status = document.querySelector("[data-converter-status]");
     const fromSelect = form.querySelector("[data-converter-from]");
     const toSelect = form.querySelector("[data-converter-to]");
     const defaultCurrency = namespace.storage.getSettings().defaultCurrency || "EUR";
     populateCurrencyOptions(fromSelect, defaultCurrency);
     populateCurrencyOptions(toSelect, defaultCurrency === "USD" ? "EUR" : "USD");
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const amount = Number(form.elements.amount.value);
-      const from = String(form.elements.from.value || "").toUpperCase();
-      const to = String(form.elements.to.value || "").toUpperCase();
-
-      if (!Number.isFinite(amount) || amount <= 0) {
-        setStatus(status, translate("messages.invalidAmount", "Bedrag moet een positief getal zijn."), "error");
-        return;
-      }
-
-      if (!namespace.storage.validateCurrency(from) || !namespace.storage.validateCurrency(to)) {
-        setStatus(status, translate("messages.invalidCurrency", "Kies een geldige valuta."), "error");
-        return;
-      }
-
-      setStatus(status, translate("converter.loading", "Wisselkoers ophalen..."), "");
-
-      try {
-        const conversion = await convertCurrency(amount, from, to);
-        renderConversion(amount, from, to, conversion.rate, conversion.cached);
-
-        if (conversion.offline) {
-          setStatus(status, "Offline modus: laatste opgeslagen wisselkoers wordt gebruikt.", "success");
-        } else if (conversion.cached) {
-          setStatus(status, translate("converter.cachedFallback", "API niet bereikbaar. Laatste opgeslagen wisselkoers wordt gebruikt."), "success");
-        } else {
-          setStatus(status, translate("converter.success", "Wisselkoers bijgewerkt."), "success");
-        }
-      } catch (error) {
-        const message =
-          error.message === "offline-without-cache"
-            ? translate("converter.noCachedRate", "Offline en nog geen opgeslagen wisselkoers beschikbaar.")
-            : translate("converter.error", "Wisselkoers ophalen is mislukt. Probeer het later opnieuw.");
-        setStatus(status, message, "error");
-      }
-    });
+    form.addEventListener("submit", handleConverterSubmit);
+    form.querySelector("[data-converter-submit]")?.addEventListener("click", handleConverterSubmit);
   }
 
   document.addEventListener("DOMContentLoaded", hydrateConverter);
 
   namespace.currency = {
     buildRatesUrl,
+    buildRatePairUrl,
     readRateFromResponse,
     getCachedRate,
     setCachedRate,
-    convertCurrency
+    convertCurrency,
+    handleConverterSubmit
   };
 })();
