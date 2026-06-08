@@ -1,0 +1,165 @@
+{
+  "a11y": {
+    "skip": "Spring naar inhoud"
+  },
+  "app": {
+    "subtitle": "Budget tracker"
+  },
+  "footer": {
+    "localFirst": "Lokaal opgeslagen, offline klaar."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "add": "Toevoegen",
+    "overview": "Overzicht",
+    "calculator": "Calculator",
+    "statistics": "Statistieken",
+    "converter": "Converter",
+    "settings": "Instellingen"
+  },
+  "pages": {
+    "dashboard": {
+      "kicker": "Vandaag in beeld",
+      "title": "Dashboard"
+    },
+    "add": {
+      "kicker": "Nieuwe invoer",
+      "title": "Transactie toevoegen"
+    },
+    "overview": {
+      "kicker": "Alle bewegingen",
+      "title": "Overzicht"
+    },
+    "calculator": {
+      "kicker": "Plan je maand",
+      "title": "Budget calculator"
+    },
+    "statistics": {
+      "kicker": "Inzicht in gedrag",
+      "title": "Statistieken"
+    },
+    "converter": {
+      "kicker": "Vakantiebudget",
+      "title": "Valuta omrekenen"
+    },
+    "settings": {
+      "kicker": "Voorkeuren",
+      "title": "Instellingen"
+    }
+  },
+  "metrics": {
+    "totalIncome": "Totale inkomsten",
+    "totalExpenses": "Totale uitgaven",
+    "currentBalance": "Huidig saldo",
+    "remainingBudget": "Resterend maandbudget",
+    "transactionCount": "Transacties",
+    "highestCategory": "Hoogste categorie",
+    "averageDaily": "Gemiddeld per dag"
+  },
+  "dashboard": {
+    "monthlyProgress": "Maandbudget voortgang",
+    "monthlyProgressHint": "Stel je maandbudget in via Instellingen of de calculator.",
+    "quickSummary": "Korte samenvatting",
+    "recentTransactions": "Recente transacties"
+  },
+  "actions": {
+    "viewAll": "Bekijk alles",
+    "addTransaction": "Transactie toevoegen",
+    "saveTransaction": "Transactie opslaan",
+    "resetForm": "Formulier wissen",
+    "clearAll": "Alles wissen",
+    "saveBudget": "Budget opslaan",
+    "convert": "Omrekenen",
+    "saveSettings": "Instellingen opslaan",
+    "clearAppData": "Alle appdata wissen",
+    "delete": "Wissen"
+  },
+  "transactions": {
+    "empty": "Nog geen transacties opgeslagen.",
+    "title": "Transacties"
+  },
+  "form": {
+    "date": "Datum",
+    "type": "Type",
+    "category": "Categorie",
+    "currency": "Valuta",
+    "description": "Omschrijving",
+    "amount": "Bedrag"
+  },
+  "types": {
+    "income": "Inkomst",
+    "expense": "Uitgave"
+  },
+  "filters": {
+    "period": "Periode",
+    "all": "Alles",
+    "today": "Vandaag",
+    "week": "Deze week",
+    "month": "Deze maand",
+    "type": "Type",
+    "allTypes": "Alle types",
+    "category": "Categorie",
+    "allCategories": "Alle categorieen"
+  },
+  "budget": {
+    "monthlyIncome": "Maandelijkse inkomsten",
+    "fixedCosts": "Vaste kosten",
+    "savingsGoal": "Spaardoel",
+    "plannedSpending": "Geplande extra uitgaven",
+    "results": "Resultaten",
+    "weeklyLimit": "Wekelijkse limiet",
+    "dailyLimit": "Dagelijkse limiet",
+    "savingsPercentage": "Spaarpercentage"
+  },
+  "statistics": {
+    "categorySpend": "Uitgaven per categorie",
+    "incomeVsExpenses": "Inkomsten versus uitgaven",
+    "noData": "Nog geen gegevens om te tonen."
+  },
+  "converter": {
+    "from": "Van",
+    "to": "Naar",
+    "result": "Resultaat",
+    "cached": "opgeslagen koers",
+    "loading": "Wisselkoers ophalen...",
+    "cachedFallback": "API niet bereikbaar. Laatste opgeslagen wisselkoers wordt gebruikt.",
+    "success": "Wisselkoers bijgewerkt.",
+    "noCachedRate": "Offline en nog geen opgeslagen wisselkoers beschikbaar.",
+    "error": "Wisselkoers ophalen is mislukt. Probeer het later opnieuw."
+  },
+  "settings": {
+    "language": "Taal",
+    "theme": "Thema",
+    "defaultCurrency": "Standaard valuta",
+    "monthlyBudget": "Maandbudget doel",
+    "pwaTitle": "PWA informatie",
+    "pwaInfo": "CashControl kan na het eerste bezoek offline openen en als app worden geinstalleerd.",
+    "installHint": "Installatie beschikbaar wanneer je browser dit ondersteunt."
+  },
+  "theme": {
+    "dark": "Donker",
+    "light": "Licht"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "messages": {
+    "invalidDate": "Vul een geldige datum in.",
+    "invalidType": "Kies inkomsten of uitgaven.",
+    "invalidCategory": "Kies een geldige categorie.",
+    "invalidDescription": "Vul een omschrijving in van maximaal 80 tekens.",
+    "invalidAmount": "Bedrag moet een positief getal zijn.",
+    "invalidCurrency": "Kies een geldige valuta.",
+    "storageError": "Opslaan is mislukt. Controleer browseropslag.",
+    "transactionSaved": "Transactie opgeslagen.",
+    "confirmDelete": "Weet je zeker dat je deze transactie wilt wissen?",
+    "confirmClearTransactions": "Alle transacties wissen? Dit kan niet ongedaan worden gemaakt.",
+    "invalidBudget": "Vul alleen geldige positieve bedragen in.",
+    "budgetSaved": "Budget opgeslagen.",
+    "invalidSettings": "Controleer je instellingen.",
+    "settingsSaved": "Instellingen opgeslagen.",
+    "confirmClearAppData": "Alle CashControl data wissen? Dit kan niet ongedaan worden gemaakt.",
+    "appDataCleared": "Alle appdata is gewist."
+  }
+}

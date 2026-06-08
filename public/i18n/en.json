@@ -1,0 +1,165 @@
+{
+  "a11y": {
+    "skip": "Skip to content"
+  },
+  "app": {
+    "subtitle": "Budget tracker"
+  },
+  "footer": {
+    "localFirst": "Stored locally, ready offline."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "add": "Add",
+    "overview": "Overview",
+    "calculator": "Calculator",
+    "statistics": "Statistics",
+    "converter": "Converter",
+    "settings": "Settings"
+  },
+  "pages": {
+    "dashboard": {
+      "kicker": "Today at a glance",
+      "title": "Dashboard"
+    },
+    "add": {
+      "kicker": "New entry",
+      "title": "Add transaction"
+    },
+    "overview": {
+      "kicker": "All activity",
+      "title": "Overview"
+    },
+    "calculator": {
+      "kicker": "Plan your month",
+      "title": "Budget calculator"
+    },
+    "statistics": {
+      "kicker": "Spending insight",
+      "title": "Statistics"
+    },
+    "converter": {
+      "kicker": "Vacation budget",
+      "title": "Currency converter"
+    },
+    "settings": {
+      "kicker": "Preferences",
+      "title": "Settings"
+    }
+  },
+  "metrics": {
+    "totalIncome": "Total income",
+    "totalExpenses": "Total expenses",
+    "currentBalance": "Current balance",
+    "remainingBudget": "Remaining monthly budget",
+    "transactionCount": "Transactions",
+    "highestCategory": "Highest category",
+    "averageDaily": "Average per day"
+  },
+  "dashboard": {
+    "monthlyProgress": "Monthly budget progress",
+    "monthlyProgressHint": "Set your monthly budget in Settings or the calculator.",
+    "quickSummary": "Quick summary",
+    "recentTransactions": "Recent transactions"
+  },
+  "actions": {
+    "viewAll": "View all",
+    "addTransaction": "Add transaction",
+    "saveTransaction": "Save transaction",
+    "resetForm": "Reset form",
+    "clearAll": "Clear all",
+    "saveBudget": "Save budget",
+    "convert": "Convert",
+    "saveSettings": "Save settings",
+    "clearAppData": "Clear app data",
+    "delete": "Delete"
+  },
+  "transactions": {
+    "empty": "No transactions saved yet.",
+    "title": "Transactions"
+  },
+  "form": {
+    "date": "Date",
+    "type": "Type",
+    "category": "Category",
+    "currency": "Currency",
+    "description": "Description",
+    "amount": "Amount"
+  },
+  "types": {
+    "income": "Income",
+    "expense": "Expense"
+  },
+  "filters": {
+    "period": "Period",
+    "all": "All",
+    "today": "Today",
+    "week": "This week",
+    "month": "This month",
+    "type": "Type",
+    "allTypes": "All types",
+    "category": "Category",
+    "allCategories": "All categories"
+  },
+  "budget": {
+    "monthlyIncome": "Monthly income",
+    "fixedCosts": "Fixed costs",
+    "savingsGoal": "Savings goal",
+    "plannedSpending": "Planned extra spending",
+    "results": "Results",
+    "weeklyLimit": "Weekly limit",
+    "dailyLimit": "Daily limit",
+    "savingsPercentage": "Savings percentage"
+  },
+  "statistics": {
+    "categorySpend": "Spending per category",
+    "incomeVsExpenses": "Income versus expenses",
+    "noData": "No data to show yet."
+  },
+  "converter": {
+    "from": "From",
+    "to": "To",
+    "result": "Result",
+    "cached": "cached rate",
+    "loading": "Fetching exchange rate...",
+    "cachedFallback": "API unavailable. The last saved exchange rate is being used.",
+    "success": "Exchange rate updated.",
+    "noCachedRate": "Offline and no saved exchange rate is available yet.",
+    "error": "Could not fetch the exchange rate. Try again later."
+  },
+  "settings": {
+    "language": "Language",
+    "theme": "Theme",
+    "defaultCurrency": "Default currency",
+    "monthlyBudget": "Monthly budget goal",
+    "pwaTitle": "PWA information",
+    "pwaInfo": "CashControl can open offline after the first visit and can be installed as an app.",
+    "installHint": "Install is available when your browser supports it."
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "messages": {
+    "invalidDate": "Enter a valid date.",
+    "invalidType": "Choose income or expense.",
+    "invalidCategory": "Choose a valid category.",
+    "invalidDescription": "Enter a description of no more than 80 characters.",
+    "invalidAmount": "Amount must be a positive number.",
+    "invalidCurrency": "Choose a valid currency.",
+    "storageError": "Saving failed. Check browser storage.",
+    "transactionSaved": "Transaction saved.",
+    "confirmDelete": "Are you sure you want to delete this transaction?",
+    "confirmClearTransactions": "Clear all transactions? This cannot be undone.",
+    "invalidBudget": "Only valid positive amounts are allowed.",
+    "budgetSaved": "Budget saved.",
+    "invalidSettings": "Check your settings.",
+    "settingsSaved": "Settings saved.",
+    "confirmClearAppData": "Clear all CashControl data? This cannot be undone.",
+    "appDataCleared": "All app data has been cleared."
+  }
+}
