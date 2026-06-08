@@ -144,6 +144,13 @@
     "online": "Online",
     "offline": "Offline"
   },
+  "pwa": {
+    "unsupported": "This browser does not fully support service workers.",
+    "installed": "CashControl is running as an installed app.",
+    "installReady": "Install is available from your browser menu.",
+    "ready": "Offline support is active after the first complete visit.",
+    "error": "Service worker registration failed."
+  },
   "messages": {
     "invalidDate": "Enter a valid date.",
     "invalidType": "Choose income or expense.",

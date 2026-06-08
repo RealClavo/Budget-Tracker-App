@@ -144,6 +144,13 @@
     "online": "Online",
     "offline": "Offline"
   },
+  "pwa": {
+    "unsupported": "Deze browser ondersteunt service workers niet volledig.",
+    "installed": "CashControl draait als geinstalleerde app.",
+    "installReady": "Installatie is beschikbaar via je browsermenu.",
+    "ready": "Offline ondersteuning is actief na het eerste volledige bezoek.",
+    "error": "Service worker registreren is mislukt."
+  },
   "messages": {
     "invalidDate": "Vul een geldige datum in.",
     "invalidType": "Kies inkomsten of uitgaven.",
