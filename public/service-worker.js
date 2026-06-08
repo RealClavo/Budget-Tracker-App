@@ -1,4 +1,4 @@
-const CACHE_NAME = "cashcontrol-static-v2";
+const CACHE_NAME = "cashcontrol-static-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -25,6 +25,10 @@ const APP_SHELL = [
   "./i18n/en.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
+  "./icons/icon-maskable-192.png",
+  "./icons/icon-maskable-512.png",
+  "./screenshots/cashcontrol-wide.png",
+  "./screenshots/cashcontrol-mobile.png",
   "./manifest.json"
 ];
 

@@ -13,13 +13,41 @@
       "src": "./icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "./icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./screenshots/cashcontrol-wide.png",
+      "sizes": "1264x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "CashControl dashboard on desktop"
+    },
+    {
+      "src": "./screenshots/cashcontrol-mobile.png",
+      "sizes": "375x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "CashControl dashboard on mobile"
     }
   ]
 }
