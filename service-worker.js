@@ -1,4 +1,4 @@
-const CACHE_NAME = "cashcontrol-root-cleanup-v1";
+const CACHE_NAME = "cashcontrol-root-cleanup-v2";
 
 self.addEventListener("install", () => {
   self.skipWaiting();

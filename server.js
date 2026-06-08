@@ -20,15 +20,15 @@ app.use(
     contentSecurityPolicy: false
   })
 );
+app.use(express.static(staticRoot));
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 300,
+    limit: 2000,
     standardHeaders: "draft-8",
     legacyHeaders: false
   })
 );
-app.use(express.static(staticRoot));
 
 if (staticFolder === "docs") {
   app.use((req, res, next) => {

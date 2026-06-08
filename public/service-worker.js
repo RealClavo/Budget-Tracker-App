@@ -1,4 +1,6 @@
-const CACHE_NAME = "cashcontrol-static-v4";
+const ASSET_VERSION = "20260608-2";
+const CACHE_NAME = `cashcontrol-static-v5-${ASSET_VERSION}`;
+const versioned = (path) => `${path}?v=${ASSET_VERSION}`;
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -8,28 +10,28 @@ const APP_SHELL = [
   "./statistics.html",
   "./converter.html",
   "./settings.html",
-  "./css/themes.css",
-  "./css/style.css",
-  "./js/storage.js",
-  "./js/theme.js",
-  "./js/calculations.js",
-  "./js/budget.js",
-  "./js/transactions.js",
-  "./js/statistics.js",
-  "./js/currency.js",
-  "./js/i18n.js",
-  "./js/settings.js",
-  "./js/pwa.js",
-  "./js/app.js",
-  "./i18n/nl.json",
-  "./i18n/en.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/icon-maskable-192.png",
-  "./icons/icon-maskable-512.png",
-  "./screenshots/cashcontrol-wide.png",
-  "./screenshots/cashcontrol-mobile.png",
-  "./manifest.json"
+  versioned("./css/themes.css"),
+  versioned("./css/style.css"),
+  versioned("./js/storage.js"),
+  versioned("./js/theme.js"),
+  versioned("./js/calculations.js"),
+  versioned("./js/budget.js"),
+  versioned("./js/transactions.js"),
+  versioned("./js/statistics.js"),
+  versioned("./js/currency.js"),
+  versioned("./js/i18n.js"),
+  versioned("./js/settings.js"),
+  versioned("./js/pwa.js"),
+  versioned("./js/app.js"),
+  versioned("./i18n/nl.json"),
+  versioned("./i18n/en.json"),
+  versioned("./icons/icon-192.png"),
+  versioned("./icons/icon-512.png"),
+  versioned("./icons/icon-maskable-192.png"),
+  versioned("./icons/icon-maskable-512.png"),
+  versioned("./screenshots/cashcontrol-wide.png"),
+  versioned("./screenshots/cashcontrol-mobile.png"),
+  versioned("./manifest.json")
 ];
 
 self.addEventListener("install", (event) => {
@@ -71,8 +73,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      const networkResponse = fetch(request)
+    fetch(request)
         .then((response) => {
           if (response && response.ok) {
             const responseToCache = response.clone();
@@ -82,7 +83,7 @@ self.addEventListener("fetch", (event) => {
           }
           return response;
         })
-        .catch(() => {
+        .catch(() => caches.match(request).then((cachedResponse) => {
           if (cachedResponse) {
             return cachedResponse;
           }
@@ -90,9 +91,6 @@ self.addEventListener("fetch", (event) => {
             return caches.match("./index.html");
           }
           return new Response("", { status: 504, statusText: "Offline" });
-        });
-
-      return cachedResponse || networkResponse;
-    })
+        }))
   );
 });

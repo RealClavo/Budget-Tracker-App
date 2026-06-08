@@ -7,7 +7,7 @@
 
 <section class="content-grid">
   <article class="panel form-panel">
-    <form class="stacked-form" data-converter-form onsubmit="window.CashControl.currency.handleConverterSubmit(event); return false;" novalidate>
+    <form class="stacked-form" data-converter-form novalidate>
       <div class="form-grid">
         <label>
           <span data-i18n="form.amount">Bedrag</span>
@@ -23,7 +23,7 @@
         </label>
       </div>
       <div class="form-actions">
-        <button class="button button-primary" type="button" data-converter-submit onclick="window.CashControl.currency.handleConverterSubmit(event)" data-i18n="actions.convert">Omrekenen</button>
+        <button class="button button-primary" type="submit" data-converter-submit data-i18n="actions.convert">Omrekenen</button>
       </div>
       <p class="form-status" data-converter-status aria-live="polite"></p>
     </form>
