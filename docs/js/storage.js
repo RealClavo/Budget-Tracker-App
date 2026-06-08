@@ -3,6 +3,8 @@
 
   const namespace = (window.CashControl = window.CashControl || {});
 
+  // Alle LocalStorage keys staan op een plek, zodat pagina's dezelfde data
+  // delen en een schoolreview snel kan zien waar browserdata wordt opgeslagen.
   const keys = {
     transactions: "cashcontrol.transactions",
     settings: "cashcontrol.settings",
@@ -48,6 +50,8 @@
       const parsed = JSON.parse(rawValue);
       return parsed === null || typeof parsed === "undefined" ? fallback : parsed;
     } catch (error) {
+      // Corrupte LocalStorage mag de app niet laten crashen; de UI krijgt een
+      // veilige fallback en de schrijffuncties herstellen de opslag later.
       return fallback;
     }
   }
@@ -83,6 +87,8 @@
     if (Array.isArray(value)) {
       return value;
     }
+    // Als iemand LocalStorage handmatig heeft aangepast naar een verkeerd type,
+    // resetten we alleen deze key in plaats van alle appdata te verwijderen.
     write(key, []);
     return [];
   }
@@ -187,6 +193,8 @@
   }
 
   function sanitizeText(value, maxLength) {
+    // User-created tekst wordt later met textContent gerenderd, maar we halen
+    // alsnog scherpe HTML-tekens en dubbele spaties weg voordat het wordt bewaard.
     return String(value || "")
       .replace(/[<>]/g, "")
       .replace(/\s+/g, " ")

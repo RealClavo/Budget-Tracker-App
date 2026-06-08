@@ -29,6 +29,8 @@
       return;
     }
 
+    // Het dashboard leest steeds de actuele LocalStorage staat en rekent daarna
+    // alles opnieuw uit. Zo blijven andere pagina's losgekoppeld maar toch sync.
     const transactions = namespace.storage.getTransactions();
     const settings = namespace.storage.getSettings();
     const budget = namespace.storage.getBudget();

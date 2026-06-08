@@ -10,6 +10,8 @@ const publicRoot = path.join(root, "public");
 const docsRoot = path.join(root, "docs");
 
 async function copyDirectory(source, destination) {
+  // GitHub Pages serveert alleen statische bestanden. Daarom kopieert de build
+  // alles uit public naar docs voordat de EJS-pagina's worden gerenderd.
   await fs.mkdir(destination, { recursive: true });
   const entries = await fs.readdir(source, { withFileTypes: true });
 
@@ -31,6 +33,8 @@ async function copyDirectory(source, destination) {
 }
 
 async function renderPage(page) {
+  // Elke pagina gebruikt dezelfde EJS-layout tijdens development en build, zodat
+  // Express-preview en GitHub Pages-output dezelfde navigatie/assets houden.
   const html = await ejs.renderFile(
     layoutPath,
     {

@@ -19,6 +19,8 @@
   }
 
   function buildRatesUrl(from, to) {
+    // Frankfurter heeft geen API key nodig. encodeURIComponent houdt de URL
+    // veilig als een selectiewaarde ooit wordt aangepast of uitgebreid.
     return `${apiBaseUrl}?base=${encodeURIComponent(from)}&quotes=${encodeURIComponent(to)}`;
   }
 
@@ -102,6 +104,9 @@
   }
 
   function readRateFromResponse(data, to) {
+    // De v2 API kan als array terugkomen, terwijl oudere voorbeelden vaak een
+    // rates-object tonen. Beide vormen blijven ondersteund zodat de converter
+    // minder snel breekt bij kleine API-response verschillen.
     if (Array.isArray(data)) {
       const matchingRate = data.find((item) => item && String(item.quote || "").toUpperCase() === to);
       return Number(matchingRate && matchingRate.rate);
@@ -123,6 +128,8 @@
       throw new Error("offline-without-cache");
     }
 
+    // Online proberen we eerst de live koers. Als de API tijdelijk stuk is,
+    // gebruikt de app alleen een eerder succesvol opgeslagen koers.
     try {
       return await fetchRate(from, to);
     } catch (error) {

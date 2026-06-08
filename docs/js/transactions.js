@@ -10,6 +10,8 @@
   }
 
   function formatDateForInput(date) {
+    // Gebruik lokale datumdelen in plaats van toISOString(); in Nederland kan
+    // een UTC-conversie anders per ongeluk naar de vorige/volgende dag schuiven.
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -21,6 +23,8 @@
       return false;
     }
     const [year, month, day] = value.split("-").map(Number);
+    // Door met losse datumdelen te bouwen vangen we ongeldige kalenderdagen af,
+    // bijvoorbeeld 2026-02-31, zonder timezone-bijwerkingen.
     const date = new Date(year, month - 1, day);
     return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
   }
@@ -125,6 +129,9 @@
   }
 
   function validateTransaction(formData) {
+    // Alle formwaarden worden opnieuw uit FormData gehaald. Daardoor vertrouwen
+    // we niet blind op HTML-attributen zoals required/min; die helpen de browser,
+    // maar deze laag bewaakt wat uiteindelijk in LocalStorage komt.
     const type = String(formData.get("type") || "").trim();
     const category = storage.sanitizeText(formData.get("category"), 40);
     const description = storage.sanitizeText(formData.get("description"), 80);
@@ -204,6 +211,8 @@
     const todayString = getTodayString();
     const weekStart = getStartOfWeek(today);
 
+    // Filters worden bewust client-side gedaan, omdat de volledige app offline
+    // draait en transacties alleen lokaal in de browser bestaan.
     return transactions.filter((transaction) => {
       if (filters.type !== "all" && transaction.type !== filters.type) {
         return false;
@@ -252,8 +261,10 @@
     meta.className = "transaction-meta";
     amount.className = `transaction-amount is-${transaction.type}`;
 
+    // Gebruik textContent voor opgeslagen gebruikersdata; zo kan een omschrijving
+    // nooit als HTML of script worden uitgevoerd.
     title.textContent = transaction.description;
-    meta.textContent = `${formatDisplayDate(transaction.date)} · ${transaction.category} · ${transaction.currency}`;
+    meta.textContent = `${formatDisplayDate(transaction.date)} - ${transaction.category} - ${transaction.currency}`;
     amount.textContent = `${transaction.type === "income" ? "+" : "-"} ${formatMoney(transaction.amount, transaction.currency)}`;
 
     main.append(title, meta);
@@ -354,6 +365,8 @@
 
   function handleTransactionFormSubmit(event) {
     if (event) {
+      // De knop heeft zowel een inline fallback als een listener. Deze vlag
+      // voorkomt dubbele saves wanneer beide paden door dezelfde klik afgaan.
       if (event.cashControlHandled) {
         return;
       }
@@ -389,6 +402,8 @@
       return;
     }
 
+    // Na succesvol opslaan resetten we het formulier, maar de succesmelding
+    // blijft staan zodat de gebruiker ziet dat de transactie echt bewaard is.
     form.dataset.preserveStatus = "true";
     form.reset();
     window.setTimeout(() => {
