@@ -96,6 +96,31 @@
     return roundMoney(expenses / days);
   }
 
+  function calculateSavingsPercentage(monthlyIncome, savingsGoal) {
+    const income = Number(monthlyIncome) || 0;
+    const savings = Number(savingsGoal) || 0;
+    if (income <= 0) {
+      return 0;
+    }
+    return Math.round((savings / income) * 100);
+  }
+
+  function calculateBudgetPlan(budget) {
+    const monthlyIncome = Number(budget.monthlyIncome) || 0;
+    const fixedCosts = Number(budget.fixedCosts) || 0;
+    const savingsGoal = Number(budget.savingsGoal) || 0;
+    const plannedSpending = Number(budget.plannedSpending) || 0;
+    const remainingMonthlyBudget = roundMoney(monthlyIncome - fixedCosts - savingsGoal - plannedSpending);
+    const spendableAmount = Math.max(0, remainingMonthlyBudget);
+
+    return {
+      remainingMonthlyBudget,
+      weeklySpendingLimit: roundMoney(spendableAmount / 4.345),
+      dailySpendingLimit: roundMoney(spendableAmount / 30),
+      savingsPercentage: calculateSavingsPercentage(monthlyIncome, savingsGoal)
+    };
+  }
+
   namespace.calculations = {
     roundMoney,
     sumTransactions,
@@ -109,6 +134,8 @@
     calculateBudgetProgress,
     getCategoryExpenseTotals,
     getHighestSpendingCategory,
-    getAverageDailySpending
+    getAverageDailySpending,
+    calculateSavingsPercentage,
+    calculateBudgetPlan
   };
 })();
