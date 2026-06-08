@@ -29,6 +29,50 @@
     return Array.from(new Set([...storage.expenseCategories, ...storage.incomeCategories]));
   }
 
+  function getTodayString() {
+    return formatDateForInput(new Date());
+  }
+
+  function parseLocalDate(value) {
+    return new Date(`${value}T00:00:00`);
+  }
+
+  function getStartOfWeek(date) {
+    const start = new Date(date);
+    const day = start.getDay() || 7;
+    start.setDate(start.getDate() - day + 1);
+    start.setHours(0, 0, 0, 0);
+    return start;
+  }
+
+  function isSameMonth(left, right) {
+    return left.getFullYear() === right.getFullYear() && left.getMonth() === right.getMonth();
+  }
+
+  function formatMoney(amount, currency) {
+    try {
+      return new Intl.NumberFormat(namespace.storage.getLanguage() === "en" ? "en-US" : "nl-NL", {
+        style: "currency",
+        currency: storage.validateCurrency(currency) ? currency : "EUR"
+      }).format(amount);
+    } catch (error) {
+      return `${currency || "EUR"} ${Number(amount || 0).toFixed(2)}`;
+    }
+  }
+
+  function formatDisplayDate(value) {
+    if (!isValidDate(value)) {
+      return value;
+    }
+    try {
+      return new Intl.DateTimeFormat(namespace.storage.getLanguage() === "en" ? "en-US" : "nl-NL", {
+        dateStyle: "medium"
+      }).format(parseLocalDate(value));
+    } catch (error) {
+      return value;
+    }
+  }
+
   function createOption(value, label) {
     const option = document.createElement("option");
     option.value = value;
@@ -130,6 +174,168 @@
     return saved;
   }
 
+  function deleteTransaction(id) {
+    const transactions = storage.getTransactions();
+    const nextTransactions = transactions.filter((transaction) => transaction.id !== id);
+    const saved = storage.setTransactions(nextTransactions);
+    if (saved) {
+      document.dispatchEvent(new CustomEvent("cashcontrol:transactions-changed"));
+    }
+    return saved;
+  }
+
+  function clearTransactions() {
+    const saved = storage.setTransactions([]);
+    if (saved) {
+      document.dispatchEvent(new CustomEvent("cashcontrol:transactions-changed"));
+    }
+    return saved;
+  }
+
+  function filterTransactions(transactions, filters) {
+    const today = new Date();
+    const todayString = getTodayString();
+    const weekStart = getStartOfWeek(today);
+
+    return transactions.filter((transaction) => {
+      if (filters.type !== "all" && transaction.type !== filters.type) {
+        return false;
+      }
+
+      if (filters.category !== "all" && transaction.category !== filters.category) {
+        return false;
+      }
+
+      if (filters.period === "today") {
+        return transaction.date === todayString;
+      }
+
+      if (filters.period === "week") {
+        const date = parseLocalDate(transaction.date);
+        return Number.isFinite(date.getTime()) && date >= weekStart && date <= today;
+      }
+
+      if (filters.period === "month") {
+        const date = parseLocalDate(transaction.date);
+        return Number.isFinite(date.getTime()) && isSameMonth(date, today);
+      }
+
+      return true;
+    });
+  }
+
+  function getOverviewFilters() {
+    return {
+      period: document.querySelector("[data-filter-period]")?.value || "all",
+      type: document.querySelector("[data-filter-type]")?.value || "all",
+      category: document.querySelector("[data-filter-category]")?.value || "all"
+    };
+  }
+
+  function createTransactionItem(transaction, options) {
+    const item = document.createElement("li");
+    const main = document.createElement("div");
+    const title = document.createElement("p");
+    const meta = document.createElement("p");
+    const amount = document.createElement("strong");
+
+    item.className = "transaction-item";
+    main.className = "transaction-main";
+    title.className = "transaction-title";
+    meta.className = "transaction-meta";
+    amount.className = `transaction-amount is-${transaction.type}`;
+
+    title.textContent = transaction.description;
+    meta.textContent = `${formatDisplayDate(transaction.date)} · ${transaction.category} · ${transaction.currency}`;
+    amount.textContent = `${transaction.type === "income" ? "+" : "-"} ${formatMoney(transaction.amount, transaction.currency)}`;
+
+    main.append(title, meta);
+    item.append(main, amount);
+
+    if (options && options.actions) {
+      const actions = document.createElement("div");
+      const deleteButton = document.createElement("button");
+      actions.className = "transaction-actions";
+      deleteButton.className = "small-button";
+      deleteButton.type = "button";
+      deleteButton.textContent = translate("actions.delete", "Wissen");
+      deleteButton.addEventListener("click", () => {
+        const confirmed = window.confirm(translate("messages.confirmDelete", "Weet je zeker dat je deze transactie wilt wissen?"));
+        if (confirmed) {
+          deleteTransaction(transaction.id);
+        }
+      });
+      actions.append(deleteButton);
+      item.append(actions);
+    }
+
+    return item;
+  }
+
+  function populateOverviewCategoryFilter() {
+    const select = document.querySelector("[data-filter-category]");
+    if (!select) {
+      return;
+    }
+
+    replaceOptions(
+      select,
+      [
+        { value: "all", label: translate("filters.allCategories", "Alle categorieen") },
+        ...getAllCategories().map((category) => ({
+          value: category,
+          label: category
+        }))
+      ],
+      select.value || "all"
+    );
+  }
+
+  function renderOverview() {
+    const list = document.querySelector("[data-transaction-list]");
+    if (!list) {
+      return;
+    }
+
+    const empty = document.querySelector("[data-overview-empty]");
+    const count = document.querySelector("[data-overview-count]");
+    const filtered = filterTransactions(storage.getTransactions(), getOverviewFilters());
+
+    list.replaceChildren();
+    filtered.forEach((transaction) => {
+      list.append(createTransactionItem(transaction, { actions: true }));
+    });
+
+    if (empty) {
+      empty.classList.toggle("is-hidden", filtered.length > 0);
+    }
+
+    if (count) {
+      count.textContent = String(filtered.length);
+    }
+  }
+
+  function hydrateOverview() {
+    if (!document.querySelector("[data-transaction-list]")) {
+      return;
+    }
+
+    populateOverviewCategoryFilter();
+    ["[data-filter-period]", "[data-filter-type]", "[data-filter-category]"].forEach((selector) => {
+      document.querySelector(selector)?.addEventListener("change", renderOverview);
+    });
+
+    document.querySelector("[data-clear-transactions]")?.addEventListener("click", () => {
+      const confirmed = window.confirm(translate("messages.confirmClearTransactions", "Alle transacties wissen? Dit kan niet ongedaan worden gemaakt."));
+      if (confirmed) {
+        clearTransactions();
+      }
+    });
+
+    document.addEventListener("cashcontrol:transactions-changed", renderOverview);
+    renderOverview();
+  }
+
   function setStatus(element, message, type) {
     if (!element) {
       return;
@@ -197,17 +403,27 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", hydrateTransactionForm);
+  document.addEventListener("DOMContentLoaded", () => {
+    hydrateTransactionForm();
+    hydrateOverview();
+  });
 
   namespace.transactions = {
     validTypes,
     isValidDate,
     getCategoriesForType,
     getAllCategories,
+    formatMoney,
+    formatDisplayDate,
     populateCurrencySelect,
     populateCategorySelect,
+    createTransactionItem,
+    filterTransactions,
     validateTransaction,
     saveTransaction,
+    deleteTransaction,
+    clearTransactions,
+    renderOverview,
     setStatus
   };
 })();
