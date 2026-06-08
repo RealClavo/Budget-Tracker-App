@@ -745,6 +745,14 @@ select:focus {
   background: var(--danger);
 }
 
+.chart-empty {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  padding: 16px;
+}
+
 .app-footer {
   display: flex;
   justify-content: space-between;
