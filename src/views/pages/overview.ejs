@@ -1,0 +1,45 @@
+<section class="page-hero" aria-labelledby="overview-title">
+  <div>
+    <p class="section-kicker" data-i18n="pages.overview.kicker">Alle bewegingen</p>
+    <h2 id="overview-title" data-i18n="pages.overview.title">Overzicht</h2>
+  </div>
+  <button class="button button-danger" type="button" data-clear-transactions data-i18n="actions.clearAll">Alles wissen</button>
+</section>
+
+<section class="panel filter-panel" aria-label="Transactie filters">
+  <div class="filter-row">
+    <label>
+      <span data-i18n="filters.period">Periode</span>
+      <select data-filter-period>
+        <option value="all" data-i18n="filters.all">Alles</option>
+        <option value="today" data-i18n="filters.today">Vandaag</option>
+        <option value="week" data-i18n="filters.week">Deze week</option>
+        <option value="month" data-i18n="filters.month">Deze maand</option>
+      </select>
+    </label>
+    <label>
+      <span data-i18n="filters.type">Type</span>
+      <select data-filter-type>
+        <option value="all" data-i18n="filters.allTypes">Alle types</option>
+        <option value="income" data-i18n="types.income">Inkomst</option>
+        <option value="expense" data-i18n="types.expense">Uitgave</option>
+      </select>
+    </label>
+    <label>
+      <span data-i18n="filters.category">Categorie</span>
+      <select data-filter-category></select>
+    </label>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="transactions-title">
+  <div class="panel-heading">
+    <h3 id="transactions-title" data-i18n="transactions.title">Transacties</h3>
+    <span data-overview-count>0</span>
+  </div>
+  <div class="empty-state" data-overview-empty>
+    <p data-i18n="transactions.empty">Nog geen transacties opgeslagen.</p>
+    <a class="button button-primary" href="./add.html" data-i18n="actions.addTransaction">Transactie toevoegen</a>
+  </div>
+  <ul class="transaction-list" data-transaction-list></ul>
+</section>

@@ -1,0 +1,37 @@
+<section class="page-hero" aria-labelledby="converter-title">
+  <div>
+    <p class="section-kicker" data-i18n="pages.converter.kicker">Vakantiebudget</p>
+    <h2 id="converter-title" data-i18n="pages.converter.title">Valuta omrekenen</h2>
+  </div>
+</section>
+
+<section class="content-grid">
+  <article class="panel form-panel">
+    <form class="stacked-form" data-converter-form novalidate>
+      <div class="form-grid">
+        <label>
+          <span data-i18n="form.amount">Bedrag</span>
+          <input type="number" name="amount" min="0.01" step="0.01" inputmode="decimal" required>
+        </label>
+        <label>
+          <span data-i18n="converter.from">Van</span>
+          <select name="from" data-converter-from required></select>
+        </label>
+        <label>
+          <span data-i18n="converter.to">Naar</span>
+          <select name="to" data-converter-to required></select>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="button button-primary" type="submit" data-i18n="actions.convert">Omrekenen</button>
+      </div>
+      <p class="form-status" data-converter-status aria-live="polite"></p>
+    </form>
+  </article>
+
+  <article class="panel result-panel">
+    <span class="section-kicker" data-i18n="converter.result">Resultaat</span>
+    <strong data-converter-result>EUR 0.00</strong>
+    <p class="muted" data-converter-rate>-</p>
+  </article>
+</section>

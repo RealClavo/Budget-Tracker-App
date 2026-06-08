@@ -1,0 +1,60 @@
+<section class="page-hero" aria-labelledby="calculator-title">
+  <div>
+    <p class="section-kicker" data-i18n="pages.calculator.kicker">Plan je maand</p>
+    <h2 id="calculator-title" data-i18n="pages.calculator.title">Budget calculator</h2>
+  </div>
+</section>
+
+<section class="content-grid">
+  <article class="panel form-panel">
+    <form class="stacked-form" data-budget-form novalidate>
+      <div class="form-grid">
+        <label>
+          <span data-i18n="budget.monthlyIncome">Maandelijkse inkomsten</span>
+          <input type="number" name="monthlyIncome" min="0" step="0.01" inputmode="decimal" required>
+        </label>
+        <label>
+          <span data-i18n="budget.fixedCosts">Vaste kosten</span>
+          <input type="number" name="fixedCosts" min="0" step="0.01" inputmode="decimal" required>
+        </label>
+        <label>
+          <span data-i18n="budget.savingsGoal">Spaardoel</span>
+          <input type="number" name="savingsGoal" min="0" step="0.01" inputmode="decimal" required>
+        </label>
+        <label>
+          <span data-i18n="budget.plannedSpending">Geplande extra uitgaven</span>
+          <input type="number" name="plannedSpending" min="0" step="0.01" inputmode="decimal" required>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="button button-primary" type="submit" data-i18n="actions.saveBudget">Budget opslaan</button>
+        <button class="button button-secondary" type="reset" data-i18n="actions.resetForm">Formulier wissen</button>
+      </div>
+      <p class="form-status" data-budget-status aria-live="polite"></p>
+    </form>
+  </article>
+
+  <article class="panel">
+    <div class="panel-heading">
+      <h3 data-i18n="budget.results">Resultaten</h3>
+    </div>
+    <dl class="definition-grid">
+      <div>
+        <dt data-i18n="metrics.remainingBudget">Resterend maandbudget</dt>
+        <dd data-calc-remaining>EUR 0.00</dd>
+      </div>
+      <div>
+        <dt data-i18n="budget.weeklyLimit">Wekelijkse limiet</dt>
+        <dd data-calc-weekly>EUR 0.00</dd>
+      </div>
+      <div>
+        <dt data-i18n="budget.dailyLimit">Dagelijkse limiet</dt>
+        <dd data-calc-daily>EUR 0.00</dd>
+      </div>
+      <div>
+        <dt data-i18n="budget.savingsPercentage">Spaarpercentage</dt>
+        <dd data-calc-savings>0%</dd>
+      </div>
+    </dl>
+  </article>
+</section>
