@@ -1,0 +1,30 @@
+{
+  "name": "cashcontrol-budget-tracker",
+  "version": "1.0.0",
+  "description": "CashControl is a local-first budget tracker Progressive Web App.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "build": "node scripts/build.js",
+    "preview": "node server.js --static docs --port 4173",
+    "test": "npm run build"
+  },
+  "keywords": [
+    "budget",
+    "pwa",
+    "localstorage",
+    "cashcontrol"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <%- include("partials/head", { title }) %>
+  </head>
+  <body data-page="<%= page.id %>">
+    <%- include("partials/header", { page }) %>
+    <%- include("partials/nav", { page, pages }) %>
+    <main class="app-main" id="main-content" tabindex="-1">
+      <%- include(page.template, { page, pages }) %>
+    </main>
+    <%- include("partials/footer") %>
+  </body>
+</html>

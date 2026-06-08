@@ -1,0 +1,8 @@
+<nav class="app-nav" aria-label="Hoofdnavigatie">
+  <% pages.forEach((item) => { %>
+    <a class="nav-link <%= item.id === page.id ? "is-active" : "" %>" href="./<%= item.output %>" data-page-link="<%= item.id %>">
+      <span class="nav-icon nav-icon-<%= item.icon %>" aria-hidden="true"></span>
+      <span data-i18n="<%= item.navKey %>"><%= item.label %></span>
+    </a>
+  <% }) %>
+</nav>
