@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b5fff">
+<meta name="description" content="CashControl is een offline budget tracker voor inkomsten, uitgaven, doelen, statistieken en vakantiewisselkoersen.">
+<title>Dashboard | CashControl</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="./css/themes.css">
+<link rel="stylesheet" href="./css/style.css">
+<script src="./js/storage.js" defer></script>
+<script src="./js/theme.js" defer></script>
+<script src="./js/calculations.js" defer></script>
+<script src="./js/budget.js" defer></script>
+<script src="./js/transactions.js" defer></script>
+<script src="./js/statistics.js" defer></script>
+<script src="./js/currency.js" defer></script>
+<script src="./js/i18n.js" defer></script>
+<script src="./js/settings.js" defer></script>
+<script src="./js/pwa.js" defer></script>
+<script src="./js/app.js" defer></script>
+
+  </head>
+  <body data-page="dashboard">
+    <header class="app-header">
+  <a class="skip-link" href="#main-content" data-i18n="a11y.skip">Spring naar inhoud</a>
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">C</span>
+    <div>
+      <p class="brand-eyebrow" data-i18n="app.subtitle">Budget tracker</p>
+      <h1>CashControl</h1>
+    </div>
+  </div>
+  <div class="header-actions" aria-label="App instellingen">
+    <button class="icon-button" type="button" data-theme-toggle aria-label="Thema wisselen" title="Thema wisselen">
+      <span class="icon icon-theme" aria-hidden="true"></span>
+    </button>
+    <a class="icon-button" href="./settings.html" aria-label="Instellingen" title="Instellingen">
+      <span class="icon icon-settings" aria-hidden="true"></span>
+    </a>
+  </div>
+</header>
+
+    <nav class="app-nav" aria-label="Hoofdnavigatie">
+  
+    <a class="nav-link is-active" href="./index.html" data-page-link="dashboard">
+      <span class="nav-icon nav-icon-home" aria-hidden="true"></span>
+      <span data-i18n="nav.dashboard">Dashboard</span>
+    </a>
+  
+    <a class="nav-link " href="./add.html" data-page-link="add">
+      <span class="nav-icon nav-icon-plus" aria-hidden="true"></span>
+      <span data-i18n="nav.add">Add Transaction</span>
+    </a>
+  
+    <a class="nav-link " href="./overview.html" data-page-link="overview">
+      <span class="nav-icon nav-icon-list" aria-hidden="true"></span>
+      <span data-i18n="nav.overview">Overview</span>
+    </a>
+  
+    <a class="nav-link " href="./calculator.html" data-page-link="calculator">
+      <span class="nav-icon nav-icon-calculator" aria-hidden="true"></span>
+      <span data-i18n="nav.calculator">Budget Calculator</span>
+    </a>
+  
+    <a class="nav-link " href="./statistics.html" data-page-link="statistics">
+      <span class="nav-icon nav-icon-chart" aria-hidden="true"></span>
+      <span data-i18n="nav.statistics">Statistics</span>
+    </a>
+  
+    <a class="nav-link " href="./converter.html" data-page-link="converter">
+      <span class="nav-icon nav-icon-exchange" aria-hidden="true"></span>
+      <span data-i18n="nav.converter">Currency Converter</span>
+    </a>
+  
+    <a class="nav-link " href="./settings.html" data-page-link="settings">
+      <span class="nav-icon nav-icon-settings" aria-hidden="true"></span>
+      <span data-i18n="nav.settings">Settings</span>
+    </a>
+  
+</nav>
+
+    <main class="app-main" id="main-content" tabindex="-1">
+      <section class="page-hero" aria-labelledby="dashboard-title">
+  <div>
+    <p class="section-kicker" data-i18n="pages.dashboard.kicker">Vandaag in beeld</p>
+    <h2 id="dashboard-title" data-i18n="pages.dashboard.title">Dashboard</h2>
+  </div>
+  <div class="status-pill" data-online-status aria-live="polite">Online</div>
+</section>
+
+<section class="summary-grid" aria-label="Budget samenvatting">
+  <article class="metric-card">
+    <span data-i18n="metrics.totalIncome">Totale inkomsten</span>
+    <strong data-total-income>EUR 0.00</strong>
+  </article>
+  <article class="metric-card">
+    <span data-i18n="metrics.totalExpenses">Totale uitgaven</span>
+    <strong data-total-expenses>EUR 0.00</strong>
+  </article>
+  <article class="metric-card metric-card-accent">
+    <span data-i18n="metrics.currentBalance">Huidig saldo</span>
+    <strong data-current-balance>EUR 0.00</strong>
+  </article>
+  <article class="metric-card">
+    <span data-i18n="metrics.remainingBudget">Resterend maandbudget</span>
+    <strong data-remaining-budget>EUR 0.00</strong>
+  </article>
+</section>
+
+<section class="content-grid">
+  <article class="panel">
+    <div class="panel-heading">
+      <h3 data-i18n="dashboard.monthlyProgress">Maandbudget voortgang</h3>
+      <span data-budget-percent>0%</span>
+    </div>
+    <div class="progress-track" aria-label="Maandbudget voortgang">
+      <span data-budget-progress style="width: 0%"></span>
+    </div>
+    <p class="muted" data-i18n="dashboard.monthlyProgressHint">Stel je maandbudget in via Instellingen of de calculator.</p>
+  </article>
+
+  <article class="panel">
+    <div class="panel-heading">
+      <h3 data-i18n="dashboard.quickSummary">Korte samenvatting</h3>
+    </div>
+    <dl class="definition-grid">
+      <div>
+        <dt data-i18n="metrics.transactionCount">Transacties</dt>
+        <dd data-transaction-count>0</dd>
+      </div>
+      <div>
+        <dt data-i18n="metrics.highestCategory">Hoogste categorie</dt>
+        <dd data-dashboard-highest-category>-</dd>
+      </div>
+      <div>
+        <dt data-i18n="metrics.averageDaily">Gemiddeld per dag</dt>
+        <dd data-dashboard-average-daily>EUR 0.00</dd>
+      </div>
+    </dl>
+  </article>
+</section>
+
+<section class="panel" aria-labelledby="recent-title">
+  <div class="panel-heading">
+    <h3 id="recent-title" data-i18n="dashboard.recentTransactions">Recente transacties</h3>
+    <a href="./overview.html" data-i18n="actions.viewAll">Bekijk alles</a>
+  </div>
+  <div class="empty-state" data-dashboard-empty>
+    <p data-i18n="transactions.empty">Nog geen transacties opgeslagen.</p>
+    <a class="button button-primary" href="./add.html" data-i18n="actions.addTransaction">Transactie toevoegen</a>
+  </div>
+  <ul class="transaction-list" data-recent-transactions></ul>
+</section>
+
+    </main>
+    <footer class="app-footer">
+  <span>CashControl</span>
+  <span data-i18n="footer.localFirst">Lokaal opgeslagen, offline klaar.</span>
+</footer>
+
+  </body>
+</html>

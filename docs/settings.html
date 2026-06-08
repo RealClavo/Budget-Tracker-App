@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b5fff">
+<meta name="description" content="CashControl is een offline budget tracker voor inkomsten, uitgaven, doelen, statistieken en vakantiewisselkoersen.">
+<title>Settings | CashControl</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="./css/themes.css">
+<link rel="stylesheet" href="./css/style.css">
+<script src="./js/storage.js" defer></script>
+<script src="./js/theme.js" defer></script>
+<script src="./js/calculations.js" defer></script>
+<script src="./js/budget.js" defer></script>
+<script src="./js/transactions.js" defer></script>
+<script src="./js/statistics.js" defer></script>
+<script src="./js/currency.js" defer></script>
+<script src="./js/i18n.js" defer></script>
+<script src="./js/settings.js" defer></script>
+<script src="./js/pwa.js" defer></script>
+<script src="./js/app.js" defer></script>
+
+  </head>
+  <body data-page="settings">
+    <header class="app-header">
+  <a class="skip-link" href="#main-content" data-i18n="a11y.skip">Spring naar inhoud</a>
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">C</span>
+    <div>
+      <p class="brand-eyebrow" data-i18n="app.subtitle">Budget tracker</p>
+      <h1>CashControl</h1>
+    </div>
+  </div>
+  <div class="header-actions" aria-label="App instellingen">
+    <button class="icon-button" type="button" data-theme-toggle aria-label="Thema wisselen" title="Thema wisselen">
+      <span class="icon icon-theme" aria-hidden="true"></span>
+    </button>
+    <a class="icon-button" href="./settings.html" aria-label="Instellingen" title="Instellingen">
+      <span class="icon icon-settings" aria-hidden="true"></span>
+    </a>
+  </div>
+</header>
+
+    <nav class="app-nav" aria-label="Hoofdnavigatie">
+  
+    <a class="nav-link " href="./index.html" data-page-link="dashboard">
+      <span class="nav-icon nav-icon-home" aria-hidden="true"></span>
+      <span data-i18n="nav.dashboard">Dashboard</span>
+    </a>
+  
+    <a class="nav-link " href="./add.html" data-page-link="add">
+      <span class="nav-icon nav-icon-plus" aria-hidden="true"></span>
+      <span data-i18n="nav.add">Add Transaction</span>
+    </a>
+  
+    <a class="nav-link " href="./overview.html" data-page-link="overview">
+      <span class="nav-icon nav-icon-list" aria-hidden="true"></span>
+      <span data-i18n="nav.overview">Overview</span>
+    </a>
+  
+    <a class="nav-link " href="./calculator.html" data-page-link="calculator">
+      <span class="nav-icon nav-icon-calculator" aria-hidden="true"></span>
+      <span data-i18n="nav.calculator">Budget Calculator</span>
+    </a>
+  
+    <a class="nav-link " href="./statistics.html" data-page-link="statistics">
+      <span class="nav-icon nav-icon-chart" aria-hidden="true"></span>
+      <span data-i18n="nav.statistics">Statistics</span>
+    </a>
+  
+    <a class="nav-link " href="./converter.html" data-page-link="converter">
+      <span class="nav-icon nav-icon-exchange" aria-hidden="true"></span>
+      <span data-i18n="nav.converter">Currency Converter</span>
+    </a>
+  
+    <a class="nav-link is-active" href="./settings.html" data-page-link="settings">
+      <span class="nav-icon nav-icon-settings" aria-hidden="true"></span>
+      <span data-i18n="nav.settings">Settings</span>
+    </a>
+  
+</nav>
+
+    <main class="app-main" id="main-content" tabindex="-1">
+      <section class="page-hero" aria-labelledby="settings-title">
+  <div>
+    <p class="section-kicker" data-i18n="pages.settings.kicker">Voorkeuren</p>
+    <h2 id="settings-title" data-i18n="pages.settings.title">Instellingen</h2>
+  </div>
+</section>
+
+<section class="content-grid">
+  <article class="panel form-panel">
+    <form class="stacked-form" data-settings-form novalidate>
+      <div class="form-grid">
+        <label>
+          <span data-i18n="settings.language">Taal</span>
+          <select name="language" data-language-select>
+            <option value="nl">Nederlands</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+        <label>
+          <span data-i18n="settings.theme">Thema</span>
+          <select name="theme" data-theme-select>
+            <option value="dark" data-i18n="theme.dark">Donker</option>
+            <option value="light" data-i18n="theme.light">Licht</option>
+          </select>
+        </label>
+        <label>
+          <span data-i18n="settings.defaultCurrency">Standaard valuta</span>
+          <select name="defaultCurrency" data-default-currency></select>
+        </label>
+        <label>
+          <span data-i18n="settings.monthlyBudget">Maandbudget doel</span>
+          <input type="number" name="monthlyBudget" min="0" step="0.01" inputmode="decimal">
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="button button-primary" type="submit" data-i18n="actions.saveSettings">Instellingen opslaan</button>
+        <button class="button button-danger" type="button" data-clear-app-data data-i18n="actions.clearAppData">Alle appdata wissen</button>
+      </div>
+      <p class="form-status" data-settings-status aria-live="polite"></p>
+    </form>
+  </article>
+
+  <article class="panel">
+    <div class="panel-heading">
+      <h3 data-i18n="settings.pwaTitle">PWA informatie</h3>
+    </div>
+    <p data-i18n="settings.pwaInfo">CashControl kan na het eerste bezoek offline openen en als app worden geinstalleerd.</p>
+    <p class="muted" data-install-status data-i18n="settings.installHint" aria-live="polite">Installatie beschikbaar wanneer je browser dit ondersteunt.</p>
+  </article>
+</section>
+
+    </main>
+    <footer class="app-footer">
+  <span>CashControl</span>
+  <span data-i18n="footer.localFirst">Lokaal opgeslagen, offline klaar.</span>
+</footer>
+
+  </body>
+</html>
