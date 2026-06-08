@@ -342,6 +342,12 @@ button {
   font-weight: 800;
 }
 
+.status-pill.is-offline {
+  border-color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 18%, transparent);
+  color: var(--warning);
+}
+
 .summary-grid,
 .content-grid {
   display: grid;
