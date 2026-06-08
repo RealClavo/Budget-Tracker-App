@@ -92,13 +92,26 @@
     }
 
     const data = await response.json();
-    const rate = Number(data && data.rates && data.rates[to]);
+    const rate = readRateFromResponse(data, to);
     if (!Number.isFinite(rate) || rate <= 0) {
       throw new Error("Invalid exchange rate");
     }
 
     setCachedRate(from, to, rate);
     return { rate, cached: false };
+  }
+
+  function readRateFromResponse(data, to) {
+    if (Array.isArray(data)) {
+      const matchingRate = data.find((item) => item && String(item.quote || "").toUpperCase() === to);
+      return Number(matchingRate && matchingRate.rate);
+    }
+
+    if (data && data.rates && typeof data.rates === "object") {
+      return Number(data.rates[to]);
+    }
+
+    return Number(data && data.rate);
   }
 
   async function convertCurrency(amount, from, to) {
@@ -177,6 +190,7 @@
 
   namespace.currency = {
     buildRatesUrl,
+    readRateFromResponse,
     getCachedRate,
     setCachedRate,
     convertCurrency

@@ -10,15 +10,19 @@
   }
 
   function formatDateForInput(date) {
-    return date.toISOString().slice(0, 10);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   }
 
   function isValidDate(value) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       return false;
     }
-    const date = new Date(`${value}T00:00:00`);
-    return Number.isFinite(date.getTime()) && formatDateForInput(date) === value;
+    const [year, month, day] = value.split("-").map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
   }
 
   function getCategoriesForType(type) {
@@ -34,7 +38,10 @@
   }
 
   function parseLocalDate(value) {
-    return new Date(`${value}T00:00:00`);
+    const [year, month, day] = String(value || "")
+      .split("-")
+      .map(Number);
+    return new Date(year, month - 1, day);
   }
 
   function getStartOfWeek(date) {
@@ -345,6 +352,53 @@
     element.classList.toggle("is-error", type === "error");
   }
 
+  function handleTransactionFormSubmit(event) {
+    if (event) {
+      if (event.cashControlHandled) {
+        return;
+      }
+      event.cashControlHandled = true;
+      event.preventDefault();
+    }
+
+    const eventTarget = event && event.currentTarget;
+    const form =
+      eventTarget && eventTarget.matches && eventTarget.matches("[data-transaction-form]")
+        ? eventTarget
+        : eventTarget && eventTarget.closest
+          ? eventTarget.closest("[data-transaction-form]")
+          : document.querySelector("[data-transaction-form]");
+
+    if (!form) {
+      return;
+    }
+
+    const status = form.querySelector("[data-form-status]");
+    const dateInput = form.elements.namedItem("date");
+    const categorySelect = form.querySelector("[data-category-select]");
+    const currencySelect = form.querySelector("[data-currency-select]");
+    const result = validateTransaction(new FormData(form));
+
+    if (result.error) {
+      setStatus(status, result.error, "error");
+      return;
+    }
+
+    if (!saveTransaction(result.value)) {
+      setStatus(status, translate("messages.storageError", "Opslaan is mislukt. Controleer browseropslag."), "error");
+      return;
+    }
+
+    form.dataset.preserveStatus = "true";
+    form.reset();
+    window.setTimeout(() => {
+      dateInput.value = formatDateForInput(new Date());
+      populateCurrencySelect(currencySelect, result.value.currency);
+      populateCategorySelect(categorySelect, getSelectedTransactionType(form));
+    });
+    setStatus(status, translate("messages.transactionSaved", "Transactie opgeslagen."), "success");
+  }
+
   function hydrateTransactionForm() {
     const form = document.querySelector("[data-transaction-form]");
     if (!form) {
@@ -352,7 +406,7 @@
     }
 
     const status = form.querySelector("[data-form-status]");
-    const dateInput = form.elements.date;
+    const dateInput = form.elements.namedItem("date");
     const categorySelect = form.querySelector("[data-category-select]");
     const currencySelect = form.querySelector("[data-currency-select]");
     const typeInputs = Array.from(form.querySelectorAll('input[name="type"]'));
@@ -362,45 +416,33 @@
     }
 
     populateCurrencySelect(currencySelect);
-    populateCategorySelect(categorySelect, form.elements.type.value || "expense");
+    populateCategorySelect(categorySelect, getSelectedTransactionType(form));
 
     typeInputs.forEach((input) => {
       input.addEventListener("change", () => {
-        populateCategorySelect(categorySelect, form.elements.type.value);
+        populateCategorySelect(categorySelect, getSelectedTransactionType(form));
       });
     });
 
     form.addEventListener("reset", () => {
       window.setTimeout(() => {
+        const preserveStatus = form.dataset.preserveStatus === "true";
+        delete form.dataset.preserveStatus;
         dateInput.value = formatDateForInput(new Date());
         populateCurrencySelect(currencySelect);
-        populateCategorySelect(categorySelect, form.elements.type.value || "expense");
-        setStatus(status, "", "");
+        populateCategorySelect(categorySelect, getSelectedTransactionType(form));
+        if (!preserveStatus) {
+          setStatus(status, "", "");
+        }
       });
     });
 
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const result = validateTransaction(new FormData(form));
+    form.addEventListener("submit", handleTransactionFormSubmit);
+    form.querySelector("[data-transaction-submit]")?.addEventListener("click", handleTransactionFormSubmit);
+  }
 
-      if (result.error) {
-        setStatus(status, result.error, "error");
-        return;
-      }
-
-      if (!saveTransaction(result.value)) {
-        setStatus(status, translate("messages.storageError", "Opslaan is mislukt. Controleer browseropslag."), "error");
-        return;
-      }
-
-      form.reset();
-      window.setTimeout(() => {
-        dateInput.value = formatDateForInput(new Date());
-        populateCurrencySelect(currencySelect, result.value.currency);
-        populateCategorySelect(categorySelect, form.elements.type.value || "expense");
-      });
-      setStatus(status, translate("messages.transactionSaved", "Transactie opgeslagen."), "success");
-    });
+  function getSelectedTransactionType(form) {
+    return form.querySelector('input[name="type"]:checked')?.value || "expense";
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -421,6 +463,7 @@
     filterTransactions,
     validateTransaction,
     saveTransaction,
+    handleTransactionFormSubmit,
     deleteTransaction,
     clearTransactions,
     renderOverview,

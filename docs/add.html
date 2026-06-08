@@ -91,7 +91,7 @@
 </section>
 
 <section class="panel form-panel">
-  <form class="stacked-form" data-transaction-form novalidate>
+  <form class="stacked-form" data-transaction-form onsubmit="window.CashControl.transactions.handleTransactionFormSubmit(event); return false;" novalidate>
     <div class="form-grid">
       <label>
         <span data-i18n="form.date">Datum</span>
@@ -134,7 +134,7 @@
     </div>
 
     <div class="form-actions">
-      <button class="button button-primary" type="submit" data-i18n="actions.saveTransaction">Transactie opslaan</button>
+      <button class="button button-primary" type="button" data-transaction-submit onclick="window.CashControl.transactions.handleTransactionFormSubmit(event)" data-i18n="actions.saveTransaction">Transactie opslaan</button>
       <button class="button button-secondary" type="reset" data-i18n="actions.resetForm">Formulier wissen</button>
     </div>
     <p class="form-status" data-form-status aria-live="polite"></p>
