@@ -21,6 +21,8 @@
   }
 
   function createEmptyChartMessage() {
+    // De grafiekcontainers blijven zichtbaar wanneer er nog geen transacties
+    // zijn; dit voorkomt lege vlakken en maakt duidelijk dat er eerst data nodig is.
     const element = document.createElement("p");
     element.className = "chart-empty";
     element.textContent = translate("statistics.noData", "Nog geen gegevens om te tonen.");
@@ -28,6 +30,8 @@
   }
 
   function createChartRow(label, amount, percentage, className) {
+    // Elke chart row is gewone HTML/CSS in plaats van Chart.js. Dat houdt de app
+    // kleiner, offline-vriendelijker en makkelijker uit te leggen in een review.
     const row = document.createElement("div");
     const header = document.createElement("div");
     const labelElement = document.createElement("span");
@@ -42,6 +46,8 @@
 
     labelElement.textContent = label;
     amountElement.textContent = formatMoney(amount);
+    // Clamp naar 0-100 zodat een foutieve berekening of lege dataset de layout
+    // niet buiten de chart-track trekt.
     fill.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
 
     header.append(labelElement, amountElement);
@@ -58,6 +64,8 @@
 
     const totals = namespace.calculations.getCategoryExpenseTotals(transactions);
     const entries = Object.entries(totals).sort((left, right) => right[1] - left[1]);
+    // De grootste categorie wordt 100%; alle andere balken worden relatief
+    // daaraan geschaald. Zo blijft de grafiek leesbaar bij kleine bedragen.
     const max = entries.reduce((highest, [, amount]) => Math.max(highest, amount), 0);
 
     chart.replaceChildren();
@@ -79,6 +87,8 @@
 
     const income = namespace.calculations.getTotalIncome(transactions);
     const expenses = namespace.calculations.getTotalExpenses(transactions);
+    // Voor de vergelijking gebruiken we de grootste van inkomsten/uitgaven als
+    // referentie, zodat beide balken in dezelfde schaal staan.
     const max = Math.max(income, expenses);
 
     chart.replaceChildren();
@@ -110,6 +120,8 @@
 
   function initStatistics() {
     renderStatistics();
+    // Statistieken zijn afgeleid van LocalStorage. Daarom renderen we opnieuw
+    // wanneer transacties, instellingen of taal veranderen.
     document.addEventListener("cashcontrol:transactions-changed", renderStatistics);
     document.addEventListener("cashcontrol:settings-changed", renderStatistics);
     document.addEventListener("cashcontrol:language-changed", renderStatistics);

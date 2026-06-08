@@ -10,6 +10,8 @@
   function setText(selector, value) {
     const element = document.querySelector(selector);
     if (element) {
+      // Dashboardvelden bestaan niet op elke pagina. Daarom zoekt deze helper
+      // veilig per selector en schrijft alleen wanneer het element aanwezig is.
       element.textContent = value;
     }
   }
@@ -84,6 +86,8 @@
       return;
     }
     const online = window.navigator.onLine;
+    // navigator.onLine is alleen een browserindicatie. De converter controleert
+    // nog steeds zelf of de wisselkoers-API echt bereikbaar is.
     status.textContent = online ? translate("status.online", "Online") : translate("status.offline", "Offline");
     status.classList.toggle("is-offline", !online);
   }
@@ -93,6 +97,8 @@
     updateOnlineStatus();
     window.addEventListener("online", updateOnlineStatus);
     window.addEventListener("offline", updateOnlineStatus);
+    // Modules praten met elkaar via kleine custom events. Daardoor hoeft het
+    // dashboard geen directe kennis te hebben van formulier- of settingscode.
     document.addEventListener("cashcontrol:transactions-changed", renderDashboard);
     document.addEventListener("cashcontrol:settings-changed", renderDashboard);
     document.addEventListener("cashcontrol:budget-changed", renderDashboard);

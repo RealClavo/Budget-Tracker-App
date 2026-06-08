@@ -17,17 +17,22 @@
   }
 
   function refreshInstallStatus() {
+    // Deze tekst staat op Settings. Het is geen technische debuglog, maar een
+    // begrijpelijke status voor de gebruiker tijdens PWA/install testen.
     if (!("serviceWorker" in navigator)) {
       setInstallStatus(translate("pwa.unsupported", "Deze browser ondersteunt service workers niet volledig."));
       return;
     }
 
     if (window.matchMedia("(display-mode: standalone)").matches) {
+      // Als de app al standalone draait, hoeven we geen install-hint meer te tonen.
       setInstallStatus(translate("pwa.installed", "CashControl draait als geinstalleerde app."));
       return;
     }
 
     if (installAvailable) {
+      // Browsers bepalen zelf wanneer beforeinstallprompt verschijnt; wij bewaren
+      // alleen dat signaal zodat Settings een duidelijke hint kan tonen.
       setInstallStatus(translate("pwa.installReady", "Installatie is beschikbaar via je browsermenu."));
       return;
     }
@@ -49,6 +54,8 @@
     navigator.serviceWorker
       .register("./service-worker.js")
       .then(() => {
+        // Registratie betekent dat de app shell na de eerste volledige load
+        // offline beschikbaar kan zijn.
         serviceWorkerReady = true;
         refreshInstallStatus();
       })
@@ -59,6 +66,8 @@
 
   function initPwa() {
     window.addEventListener("beforeinstallprompt", () => {
+      // We tonen geen eigen install-knop, maar leggen wel uit dat installeren via
+      // het browsermenu beschikbaar is.
       installAvailable = true;
       refreshInstallStatus();
     });

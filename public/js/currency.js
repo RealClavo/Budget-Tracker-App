@@ -29,6 +29,8 @@
   }
 
   function getCachedRate(from, to) {
+    // Koersen worden per valutapaar opgeslagen. EUR_USD en USD_EUR zijn bewust
+    // aparte keys, omdat de API-rates niet simpelweg als dezelfde waarde gelden.
     return namespace.storage.getCachedRates()[cacheKey(from, to)] || null;
   }
 
@@ -87,6 +89,8 @@
       return { rate: 1, cached: false };
     }
 
+    // Eerst gebruiken we de directe v2 pair endpoint. Als die endpoint of vorm
+    // niet beschikbaar is, valt de code terug op de bredere rates endpoint.
     const pairResult = await fetchRateFromUrl(buildRatePairUrl(from, to), to).catch(() => null);
     if (pairResult) {
       setCachedRate(from, to, pairResult);
@@ -175,6 +179,8 @@
           : document.querySelector("[data-converter-form]");
 
     if (!form) {
+      // Zonder formulier is er niets om te converteren. Deze guard voorkomt dat
+      // testpagina's of toekomstige pagina's zonder converter een fout gooien.
       return;
     }
 
@@ -230,6 +236,8 @@
     populateCurrencyOptions(fromSelect, defaultCurrency);
     populateCurrencyOptions(toSelect, defaultCurrency === "USD" ? "EUR" : "USD");
 
+    // De submit-listener is de echte route; de click-listener is een extra vangnet
+    // voor browsers of markup-wijzigingen waarbij alleen de knopactie afgaat.
     form.addEventListener("submit", handleConverterSubmit);
     form.querySelector("[data-converter-submit]")?.addEventListener("click", handleConverterSubmit);
   }

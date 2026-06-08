@@ -50,6 +50,9 @@ async function renderPage(page) {
 }
 
 async function build() {
+  // De docs-map wordt volledig opnieuw opgebouwd. Dat voorkomt dat oude icons,
+  // manifests of JavaScript-bestanden blijven staan nadat ze uit public/ zijn
+  // verwijderd of hernoemd.
   await fs.rm(docsRoot, { recursive: true, force: true });
   await fs.mkdir(docsRoot, { recursive: true });
   await copyDirectory(publicRoot, docsRoot);

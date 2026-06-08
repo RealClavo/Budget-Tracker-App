@@ -58,6 +58,8 @@
 
   function read(key, fallback) {
     try {
+      // LocalStorage kan in privacy-modus of door browserinstellingen blokkeren.
+      // Een try/catch per read houdt de rest van de app bruikbaar.
       return safeParseJson(window.localStorage.getItem(key), fallback);
     } catch (error) {
       return fallback;
@@ -66,6 +68,8 @@
 
   function write(key, value) {
     try {
+      // Alle waarden worden als JSON opgeslagen, ook simpele strings. Daardoor
+      // gebruikt elke read/write-functie dezelfde parse-route en fallback-logica.
       window.localStorage.setItem(key, JSON.stringify(value));
       return true;
     } catch (error) {
@@ -123,6 +127,8 @@
       ...getSettings(),
       ...settings
     };
+    // Settings komen deels uit formulieren en deels uit oude browserdata. Hier
+    // normaliseren we ze voordat andere modules erop gaan rekenen.
     nextSettings.defaultCurrency = validateCurrency(nextSettings.defaultCurrency) ? nextSettings.defaultCurrency : "EUR";
     nextSettings.monthlyBudget = toPositiveNumber(nextSettings.monthlyBudget, 0);
     return write(keys.settings, nextSettings);
@@ -206,6 +212,8 @@
     if (window.crypto && typeof window.crypto.randomUUID === "function") {
       return window.crypto.randomUUID();
     }
+    // Fallback voor oudere browsers: niet cryptografisch belangrijk, alleen
+    // bedoeld om lokale transacties van elkaar te kunnen onderscheiden.
     return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
   }
 

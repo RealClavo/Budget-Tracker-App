@@ -21,6 +21,8 @@
       return;
     }
     select.replaceChildren();
+    // De valuta-opties komen uit storage.js, zodat instellingen, transacties en
+    // converter exact dezelfde toegestane valuta gebruiken.
     namespace.storage.currencies.forEach((currency) => {
       const option = document.createElement("option");
       option.value = currency;
@@ -38,16 +40,21 @@
 
     const status = document.querySelector("[data-settings-status]");
     const settings = namespace.storage.getSettings();
+    // Bij openen van Settings vullen we het formulier vanuit LocalStorage. De UI
+    // is daardoor altijd een weergave van de huidige opgeslagen voorkeuren.
     form.elements.language.value = namespace.storage.getLanguage();
     form.elements.theme.value = namespace.storage.getTheme();
     form.elements.monthlyBudget.value = Number(settings.monthlyBudget || 0).toFixed(2);
     populateCurrencySelect(form.querySelector("[data-default-currency]"), settings.defaultCurrency);
 
     form.elements.language.addEventListener("change", () => {
+      // Taal wisselt direct voor feedback; de submitknop bewaart daarna de rest
+      // van de instellingen zoals valuta en maandbudget.
       namespace.i18n.setLanguage(form.elements.language.value);
     });
 
     form.elements.theme.addEventListener("change", () => {
+      // Thema wisselt direct, zodat de gebruiker meteen ziet wat licht/donker doet.
       namespace.theme.applyTheme(form.elements.theme.value);
     });
 
@@ -65,6 +72,8 @@
         defaultCurrency,
         monthlyBudget
       });
+      // Taal en thema worden ook via hun eigen modules gezet, omdat die modules
+      // extra DOM-updates en events uitvoeren naast alleen LocalStorage schrijven.
       await namespace.i18n.setLanguage(form.elements.language.value);
       namespace.theme.applyTheme(form.elements.theme.value);
       document.dispatchEvent(new CustomEvent("cashcontrol:settings-changed"));
@@ -76,6 +85,8 @@
       if (!confirmed) {
         return;
       }
+      // Clear all wist transacties, budget, thema, taal en cache. Daarna zetten
+      // we basisvoorkeuren terug zodat de app direct bruikbaar blijft.
       namespace.storage.clearAll();
       namespace.storage.setLanguage(form.elements.language.value);
       namespace.storage.setTheme(form.elements.theme.value);
@@ -84,6 +95,8 @@
       form.elements.defaultCurrency.value = namespace.storage.defaultSettings.defaultCurrency;
       form.elements.monthlyBudget.value = Number(namespace.storage.defaultSettings.monthlyBudget).toFixed(2);
       setStatus(status, translate("messages.appDataCleared", "Alle appdata is gewist."), "success");
+      // Alle afgeleide schermen krijgen een update-event, zodat dashboard,
+      // statistieken en calculator niet verouderde waarden blijven tonen.
       document.dispatchEvent(new CustomEvent("cashcontrol:transactions-changed"));
       document.dispatchEvent(new CustomEvent("cashcontrol:settings-changed"));
       document.dispatchEvent(new CustomEvent("cashcontrol:budget-changed"));

@@ -1,3 +1,7 @@
+// Centrale paginaconfiguratie voor de hele app.
+// Deze lijst wordt op drie plekken gebruikt: Express-routes tijdens development,
+// de navigatiebalk in de EJS-layout en de statische HTML-output in docs/.
+// Daardoor hoeft een nieuwe pagina maar hier te worden toegevoegd.
 const pages = [
   {
     id: "dashboard",

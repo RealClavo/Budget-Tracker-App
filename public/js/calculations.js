@@ -3,10 +3,15 @@
 
   const namespace = (window.CashControl = window.CashControl || {});
 
+  // Geldbedragen worden steeds op 2 decimalen afgerond, zodat berekeningen in
+  // cards, grafieken en LocalStorage niet langzaam lange floating-point waarden
+  // zoals 12.34000000001 gaan tonen.
   function roundMoney(value) {
     return Math.round((Number(value) || 0) * 100) / 100;
   }
 
+  // Algemene optelfunctie voor transacties. Door een predicate mee te geven kan
+  // dezelfde functie inkomsten, uitgaven of latere deelsets optellen.
   function sumTransactions(transactions, predicate) {
     return roundMoney(
       transactions.reduce((total, transaction) => {
@@ -37,6 +42,8 @@
   }
 
   function getMonthlyTransactions(transactions, date) {
+    // Transactiedatums worden als YYYY-MM-DD tekst opgeslagen; startsWith op
+    // YYYY-MM is daarom simpel, snel en timezone-onafhankelijk.
     const monthKey = getCurrentMonthKey(date || new Date());
     return transactions.filter((transaction) => String(transaction.date || "").startsWith(monthKey));
   }
@@ -48,9 +55,13 @@
   function getMonthlyBudgetGoal(settings, budget) {
     const settingsGoal = Number(settings && settings.monthlyBudget);
     if (Number.isFinite(settingsGoal) && settingsGoal > 0) {
+      // De expliciete instelling krijgt voorrang, omdat de gebruiker hiermee
+      // handmatig een maandlimiet kan zetten zonder de calculator te gebruiken.
       return settingsGoal;
     }
 
+    // Als er geen handmatig maandbudget is, leiden we het budget af uit de
+    // calculator: inkomen min vaste kosten min spaardoel.
     const monthlyIncome = Number(budget && budget.monthlyIncome) || 0;
     const fixedCosts = Number(budget && budget.fixedCosts) || 0;
     const savingsGoal = Number(budget && budget.savingsGoal) || 0;
@@ -66,12 +77,16 @@
     const goal = getMonthlyBudgetGoal(settings, budget);
     const used = getMonthlyExpenses(transactions, date);
     if (goal <= 0) {
+      // Zonder doel tonen we 0% in plaats van NaN/Infinity. De UI geeft dan ook
+      // een hint dat het maandbudget nog ingesteld moet worden.
       return 0;
     }
     return Math.min(100, Math.max(0, Math.round((used / goal) * 100)));
   }
 
   function getCategoryExpenseTotals(transactions) {
+    // Alleen uitgaven tellen mee voor categorie-statistieken; inkomsten hebben
+    // eigen categorieen en zouden de uitgavenanalyse anders vervuilen.
     return transactions
       .filter((transaction) => transaction.type === "expense")
       .reduce((totals, transaction) => {
@@ -94,6 +109,8 @@
     const monthlyTransactions = getMonthlyTransactions(transactions, date || new Date());
     const expenses = getTotalExpenses(monthlyTransactions);
     const currentDate = date || new Date();
+    // We delen door de huidige dag van de maand. Op de 8e is dit dus een
+    // gemiddelde over 8 dagen, niet over de hele maand.
     const days = Math.max(1, currentDate.getDate());
     return roundMoney(expenses / days);
   }
@@ -113,6 +130,8 @@
     const savingsGoal = Number(budget.savingsGoal) || 0;
     const plannedSpending = Number(budget.plannedSpending) || 0;
     const remainingMonthlyBudget = roundMoney(monthlyIncome - fixedCosts - savingsGoal - plannedSpending);
+    // Week/daglimieten mogen niet negatief worden; als het budget al overschreden
+    // is, tonen we 0 als praktische limiet.
     const spendableAmount = Math.max(0, remainingMonthlyBudget);
 
     return {

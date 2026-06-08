@@ -8,6 +8,8 @@
   }
 
   function applyTheme(theme) {
+    // Alleen light en dark zijn toegestaan. Onbekende waarden vallen terug naar
+    // dark, zodat corrupte LocalStorage geen half thema veroorzaakt.
     const nextTheme = theme === "light" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", nextTheme);
     if (namespace.storage) {
@@ -15,6 +17,7 @@
     }
     const themeSelect = document.querySelector("[data-theme-select]");
     if (themeSelect) {
+      // Als Settings openstaat, houden we de select synchroon met de headerknop.
       themeSelect.value = nextTheme;
     }
     document.dispatchEvent(new CustomEvent("cashcontrol:theme-changed", { detail: { theme: nextTheme } }));
@@ -26,6 +29,8 @@
   }
 
   function initTheme() {
+    // Het thema wordt zo vroeg mogelijk bij DOMContentLoaded gezet, voordat de
+    // gebruiker met formulieren of navigatie werkt.
     applyTheme(getStorageTheme());
     document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
       button.addEventListener("click", toggleTheme);

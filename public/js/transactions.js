@@ -42,6 +42,8 @@
   }
 
   function parseLocalDate(value) {
+    // HTML date inputs leveren yyyy-mm-dd. Door zelf de delen te parsen blijven
+    // we in lokale tijd en vermijden we UTC-verschuivingen rond middernacht.
     const [year, month, day] = String(value || "")
       .split("-")
       .map(Number);
@@ -180,6 +182,8 @@
 
   function saveTransaction(transaction) {
     const transactions = storage.getTransactions();
+    // Nieuwste transacties komen bovenaan de lijst, zodat dashboard en overzicht
+    // zonder extra sortering meteen recentste data tonen.
     transactions.unshift(transaction);
     const saved = storage.setTransactions(transactions);
     if (saved) {
@@ -278,6 +282,8 @@
       deleteButton.type = "button";
       deleteButton.textContent = translate("actions.delete", "Wissen");
       deleteButton.addEventListener("click", () => {
+        // Verwijderen is definitief omdat alles lokaal in de browser staat. Een
+        // korte confirm voorkomt dat een losse klik meteen data kwijtraakt.
         const confirmed = window.confirm(translate("messages.confirmDelete", "Weet je zeker dat je deze transactie wilt wissen?"));
         if (confirmed) {
           deleteTransaction(transaction.id);
